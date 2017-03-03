@@ -1,0 +1,17 @@
+\contentsline {chapter}{\numberline {1}Introduction}{3}
+\contentsline {chapter}{\numberline {2}Floppy Drive Characteristics}{4}
+\contentsline {section}{\numberline {2.1}Floppy Pinout}{4}
+\contentsline {section}{\numberline {2.2}Stepper Motor Movement}{5}
+\contentsline {section}{\numberline {2.3}Stepper Motor Bandwidth}{5}
+\contentsline {section}{\numberline {2.4}Power}{5}
+\contentsline {chapter}{\numberline {3}Wiring Diagram}{6}
+\contentsline {section}{\numberline {3.1}Power}{6}
+\contentsline {section}{\numberline {3.2}Arduino Wiring}{6}
+\contentsline {chapter}{\numberline {4}MIDI Files}{7}
+\contentsline {section}{\numberline {4.1}MIDI Notes}{7}
+\contentsline {section}{\numberline {4.2}MIDI Messages}{8}
+\contentsline {chapter}{\numberline {5}Software}{9}
+\contentsline {section}{\numberline {5.1}MIDI Player}{9}
+\contentsline {section}{\numberline {5.2}MIDI to Serial Driver}{9}
+\contentsline {section}{\numberline {5.3}Arduino}{9}
+\contentsline {chapter}{\numberline {6}Arduino}{10}

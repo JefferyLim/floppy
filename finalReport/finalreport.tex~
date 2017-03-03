@@ -1,0 +1,52 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage{listings}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{float}
+\graphicspath{ {../images/} }
+\setlength\parindent{0pt}
+
+
+\newcommand{\p}{\partial}
+\newcommand{\mth}[1]{
+  \begin{align*}
+    #1
+  \end{align*}
+}
+
+
+
+\begin{document}
+
+\begin{center}
+  \Huge Floppy Drive Orchestra \\
+  \huge University of Colorado Boulder \\
+  \Large Independent Study\\
+  
+  \vspace{6in}
+    \huge Jeffery Lim \\
+    \huge Jeffery.Lim@colorado.edu\\
+    \Large Under supervision of Dr. Shalom Ruben \\~\\~\\
+\end{center}
+\pagebreak
+
+
+\tableofcontents
+
+
+\section{Introduction}
+
+The floppy drive orchestra project was started in order gain an understanding on how it is possible to play music using floppy drives. Through the semester, the floppy drives were characterized, in order to gain an understanding of its relation to sound. The power requirements were also taken in order to power the system, and finally, code was written to allow multiple floppy drives to be played. 
+\section{Floppy Drives}
+
+\subsection{Characteristic}
+\pagebreak
+
+
+\end{document}
