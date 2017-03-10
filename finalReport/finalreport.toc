@@ -1,17 +1,26 @@
 \contentsline {chapter}{\numberline {1}Introduction}{3}
 \contentsline {chapter}{\numberline {2}Floppy Drive Characteristics}{4}
-\contentsline {section}{\numberline {2.1}Floppy Pinout}{4}
-\contentsline {section}{\numberline {2.2}Stepper Motor Movement}{5}
-\contentsline {section}{\numberline {2.3}Stepper Motor Bandwidth}{5}
-\contentsline {section}{\numberline {2.4}Power}{5}
-\contentsline {chapter}{\numberline {3}Wiring Diagram}{6}
-\contentsline {section}{\numberline {3.1}Power}{6}
-\contentsline {section}{\numberline {3.2}Arduino Wiring}{6}
-\contentsline {chapter}{\numberline {4}MIDI Files}{7}
-\contentsline {section}{\numberline {4.1}MIDI Notes}{7}
-\contentsline {section}{\numberline {4.2}MIDI Messages}{8}
-\contentsline {chapter}{\numberline {5}Software}{9}
-\contentsline {section}{\numberline {5.1}MIDI Player}{9}
-\contentsline {section}{\numberline {5.2}MIDI to Serial Driver}{9}
-\contentsline {section}{\numberline {5.3}Arduino}{9}
-\contentsline {chapter}{\numberline {6}Arduino}{10}
+\contentsline {section}{\numberline {2.1}Power}{4}
+\contentsline {section}{\numberline {2.2}Floppy Pinout}{4}
+\contentsline {section}{\numberline {2.3}Stepper Motor Movement}{6}
+\contentsline {section}{\numberline {2.4}Stepper Motor Bandwidth}{6}
+\contentsline {chapter}{\numberline {3}Wiring Diagram}{7}
+\contentsline {section}{\numberline {3.1}Power}{7}
+\contentsline {section}{\numberline {3.2}Arduino Wiring}{7}
+\contentsline {chapter}{\numberline {4}MIDI Files}{8}
+\contentsline {section}{\numberline {4.1}MIDI Notes}{8}
+\contentsline {section}{\numberline {4.2}MIDI Messages}{9}
+\contentsline {chapter}{\numberline {5}Software}{10}
+\contentsline {section}{\numberline {5.1}MIDI Player}{10}
+\contentsline {section}{\numberline {5.2}MIDI to Serial Driver}{10}
+\contentsline {section}{\numberline {5.3}Arduino}{10}
+\contentsline {section}{\numberline {5.4}SD Card(?))}{10}
+\contentsline {chapter}{\numberline {6}Arduino}{11}
+\contentsline {section}{\numberline {6.1}Timer1 Library}{11}
+\contentsline {section}{\numberline {6.2}Setup}{11}
+\contentsline {section}{\numberline {6.3}Serial Reader}{11}
+\contentsline {section}{\numberline {6.4}ISR}{11}
+\contentsline {section}{\numberline {6.5}Floppy Drive Driver}{11}
+\contentsline {section}{\numberline {6.6}SD Card(?)}{11}
+\contentsline {chapter}{Appendix A}{12}
+\contentsline {section}{\numberline {A.1}Full C Code}{12}

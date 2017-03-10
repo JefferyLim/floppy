@@ -9,7 +9,7 @@
 #define NUMDRIVES 4
 #define MAXSTEPS 150
 #define LED 13
-#define RESOLUTION 50
+#define RESOLUTION 25
 
 //Pin 13 is reserved for LED
 
