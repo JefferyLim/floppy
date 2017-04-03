@@ -1,26 +1,31 @@
-\contentsline {chapter}{\numberline {1}Introduction}{3}
-\contentsline {chapter}{\numberline {2}Floppy Drive Characteristics}{4}
-\contentsline {section}{\numberline {2.1}Power}{4}
-\contentsline {section}{\numberline {2.2}Floppy Pinout}{4}
-\contentsline {section}{\numberline {2.3}Stepper Motor Movement}{6}
-\contentsline {section}{\numberline {2.4}Stepper Motor Bandwidth}{6}
-\contentsline {chapter}{\numberline {3}Wiring Diagram}{7}
-\contentsline {section}{\numberline {3.1}Power}{7}
-\contentsline {section}{\numberline {3.2}Arduino Wiring}{7}
-\contentsline {chapter}{\numberline {4}MIDI Files}{8}
-\contentsline {section}{\numberline {4.1}MIDI Notes}{8}
-\contentsline {section}{\numberline {4.2}MIDI Messages}{9}
-\contentsline {chapter}{\numberline {5}Software}{10}
-\contentsline {section}{\numberline {5.1}MIDI Player}{10}
-\contentsline {section}{\numberline {5.2}MIDI to Serial Driver}{10}
-\contentsline {section}{\numberline {5.3}Arduino}{10}
-\contentsline {section}{\numberline {5.4}SD Card(?))}{10}
-\contentsline {chapter}{\numberline {6}Arduino}{11}
-\contentsline {section}{\numberline {6.1}Timer1 Library}{11}
-\contentsline {section}{\numberline {6.2}Setup}{11}
-\contentsline {section}{\numberline {6.3}Serial Reader}{11}
-\contentsline {section}{\numberline {6.4}ISR}{11}
-\contentsline {section}{\numberline {6.5}Floppy Drive Driver}{11}
-\contentsline {section}{\numberline {6.6}SD Card(?)}{11}
-\contentsline {chapter}{Appendix A}{12}
-\contentsline {section}{\numberline {A.1}Full C Code}{12}
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}
+\contentsline {chapter}{\numberline {2}Floppy Drive Characteristics}{4}{chapter.2}
+\contentsline {section}{\numberline {2.1}Floppy Pinout}{4}{section.2.1}
+\contentsline {section}{\numberline {2.2}Power}{5}{section.2.2}
+\contentsline {section}{\numberline {2.3}Stepper Motor Movement}{6}{section.2.3}
+\contentsline {section}{\numberline {2.4}Stepper Motor Bandwidth}{6}{section.2.4}
+\contentsline {section}{\numberline {2.5}Frequency}{7}{section.2.5}
+\contentsline {chapter}{\numberline {3}Hardware}{8}{chapter.3}
+\contentsline {section}{\numberline {3.1}Power}{8}{section.3.1}
+\contentsline {section}{\numberline {3.2}Arduino Wiring}{8}{section.3.2}
+\contentsline {section}{\numberline {3.3}Mount}{8}{section.3.3}
+\contentsline {chapter}{\numberline {4}MIDI Files}{9}{chapter.4}
+\contentsline {section}{\numberline {4.1}MIDI Notes}{9}{section.4.1}
+\contentsline {section}{\numberline {4.2}MIDI Messages}{10}{section.4.2}
+\contentsline {chapter}{\numberline {5}Software}{11}{chapter.5}
+\contentsline {section}{\numberline {5.1}Using a PC}{11}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}MIDI Player}{11}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}MIDI to Serial Driver}{11}{subsection.5.1.2}
+\contentsline {section}{\numberline {5.2}Arduino}{12}{section.5.2}
+\contentsline {section}{\numberline {5.3}SD Card(?)}{12}{section.5.3}
+\contentsline {chapter}{\numberline {6}Arduino}{13}{chapter.6}
+\contentsline {section}{\numberline {6.1}Parameters}{13}{section.6.1}
+\contentsline {section}{\numberline {6.2}Timer1 Library}{14}{section.6.2}
+\contentsline {section}{\numberline {6.3}Setup}{14}{section.6.3}
+\contentsline {section}{\numberline {6.4}Serial Reader}{15}{section.6.4}
+\contentsline {section}{\numberline {6.5}ISR}{16}{section.6.5}
+\contentsline {section}{\numberline {6.6}Floppy Drive Driver}{18}{section.6.6}
+\contentsline {section}{\numberline {6.7}SD Card(?)}{18}{section.6.7}
+\contentsline {chapter}{\numberline {7}Bill of Materials}{19}{chapter.7}
+\contentsline {chapter}{Appendix A}{20}{appendix*.9}
+\contentsline {section}{\numberline {A.1}Full Arduino Code}{20}{section.A.1}

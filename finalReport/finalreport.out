@@ -1,0 +1,31 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Floppy Drive Characteristics}{}% 2
+\BOOKMARK [1][-]{section.2.1}{Floppy Pinout}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{Power}{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.3}{Stepper Motor Movement}{chapter.2}% 5
+\BOOKMARK [1][-]{section.2.4}{Stepper Motor Bandwidth}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.5}{Frequency}{chapter.2}% 7
+\BOOKMARK [0][-]{chapter.3}{Hardware}{}% 8
+\BOOKMARK [1][-]{section.3.1}{Power}{chapter.3}% 9
+\BOOKMARK [1][-]{section.3.2}{Arduino Wiring}{chapter.3}% 10
+\BOOKMARK [1][-]{section.3.3}{Mount}{chapter.3}% 11
+\BOOKMARK [0][-]{chapter.4}{MIDI Files}{}% 12
+\BOOKMARK [1][-]{section.4.1}{MIDI Notes}{chapter.4}% 13
+\BOOKMARK [1][-]{section.4.2}{MIDI Messages}{chapter.4}% 14
+\BOOKMARK [0][-]{chapter.5}{Software}{}% 15
+\BOOKMARK [1][-]{section.5.1}{Using a PC}{chapter.5}% 16
+\BOOKMARK [2][-]{subsection.5.1.1}{MIDI Player}{section.5.1}% 17
+\BOOKMARK [2][-]{subsection.5.1.2}{MIDI to Serial Driver}{section.5.1}% 18
+\BOOKMARK [1][-]{section.5.2}{Arduino}{chapter.5}% 19
+\BOOKMARK [1][-]{section.5.3}{SD Card\(?\)}{chapter.5}% 20
+\BOOKMARK [0][-]{chapter.6}{Arduino}{}% 21
+\BOOKMARK [1][-]{section.6.1}{Parameters}{chapter.6}% 22
+\BOOKMARK [1][-]{section.6.2}{Timer1 Library}{chapter.6}% 23
+\BOOKMARK [1][-]{section.6.3}{Setup}{chapter.6}% 24
+\BOOKMARK [1][-]{section.6.4}{Serial Reader}{chapter.6}% 25
+\BOOKMARK [1][-]{section.6.5}{ISR}{chapter.6}% 26
+\BOOKMARK [1][-]{section.6.6}{Floppy Drive Driver}{chapter.6}% 27
+\BOOKMARK [1][-]{section.6.7}{SD Card\(?\)}{chapter.6}% 28
+\BOOKMARK [0][-]{chapter.7}{Bill of Materials}{}% 29
+\BOOKMARK [0][-]{appendix*.9}{Appendix A}{}% 30
+\BOOKMARK [1][-]{section.A.1}{Full Arduino Code}{appendix*.9}% 31

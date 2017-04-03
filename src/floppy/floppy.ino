@@ -1,21 +1,15 @@
 // floppy - Independent Study Spring 2017 with Professor Shalom Ruben
-// Needs to be used with a MiDi to Serial driver http://www.varal.org/ttymidi/
-//ttymidi -b 115200 -s /dev/ttyACM0 -v
-//aconnect -i and aconnect -o to find output and input drivers
 
 #include <TimerOne.h>
 #include <MIDI.h>
 
-#define NUMDRIVES 4
-#define MAXSTEPS 150
-#define LED 13
-#define RESOLUTION 25
+#define NUMDRIVES 8 //Number of Drives being used
 
-//Pin 13 is reserved for LED
+#define MAXSTEPS 150 //Maximum number of steps the head can go
+#define RESOLUTION 100 //us resolution of timer
 
-//drive Count starts at 12 i.e Drive 1: stepPins[1] = 12, dirPins[1] = 11
-volatile int stepPins[NUMDRIVES]; //EVEN PINS
-volatile int dirPins[NUMDRIVES]; //ODD PINS
+volatile int stepPins[NUMDRIVES] = {3, 5, 7, 9, A5, A3, A1}; //ODD PINS
+volatile int dirPins[NUMDRIVES]  = {2, 4, 6, 8, A4, A2, A0} ; //EVEN PINS
 
 //drive head position
 volatile int headPos[NUMDRIVES];
@@ -52,14 +46,12 @@ void setup()  {
 
     headPos[i] = 0;
 
-    stepPins[i] = (12-2*i);
-    dirPins[i] = (12-2*i-1);
   }
 
   //Midi note setup found http://subsynth.sourceforge.net/midinote2freq.html
   double midi[127];
   int a = 440; // a is 440 hz...
-  for (i = 0; i < 127; ++i)
+  for (i = 0; i < 128; ++i)
   {
     midi[i] = a*pow(2, ((double)(i-69)/12));
   }
@@ -70,8 +62,6 @@ void setup()  {
   }
 
   //Pin Setup 
-  pinMode(LED, OUTPUT); 
-
   for(i = 0; i < NUMDRIVES; i++){
     pinMode(stepPins[i], OUTPUT);
     pinMode(dirPins[i], OUTPUT);
@@ -99,7 +89,8 @@ void setup()  {
   Timer1.initialize(RESOLUTION); //1200 microseconds * 1 = 800 Hz, but 400 Hz output.
   Timer1.attachInterrupt(count);
 
-  Serial.begin(115200); //Serial for MIDI to Serial Drivers
+  Serial.begin(115200);   //Serial for MIDI to Serial Drivers
+
 } 
 
 void loop()  {  
@@ -117,7 +108,7 @@ void loop()  {
       if(midiCommand == 0x90){
         notePeriod[midiChannel] = noteLUT[midiNote];
       }
-      else if(midiCommand == 0x80){
+      else if(midiCommand == 0x80 || (midiCommand == 0xB0 && midiNote == 120)){
         notePeriod[midiChannel] = 0;
       }
     }
@@ -162,5 +153,6 @@ void count(){
   }
 
 }
+
 
 
