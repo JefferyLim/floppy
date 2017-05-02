@@ -1,43 +1,58 @@
 // floppy - Independent Study Spring 2017 with Professor Shalom Ruben
 
-#include <TimerOne.h>
-#include <MIDI.h>
+#include <TimerOne.h>  
+#include <TimerThree.h>
 
-#define NUMDRIVES 8 //Number of Drives being used
+#include <SD.h>
+
+#define NUMDRIVES 7 //Number of Drives being used
 
 #define MAXSTEPS 150 //Maximum number of steps the head can go
 #define RESOLUTION 100 //us resolution of timer
 
-volatile int stepPins[NUMDRIVES] = {3, 5, 7, 9, A5, A3, A1}; //ODD PINS
-volatile int dirPins[NUMDRIVES]  = {2, 4, 6, 8, A4, A2, A0} ; //EVEN PINS
+//(125 cycles) * (128 prescaler) / (16MHz clock speed) = 1ms
+//(1 * 128) / 16MHz
+
+volatile int stepPins[NUMDRIVES + 1] = {
+  A0, A2, A4, 9, A5, A3, A1}; //ODD PINS
+volatile int dirPins[NUMDRIVES + 1]  = {
+  A1, A3, A5, 8, A4, A2, A0}; //EVEN PINS
+
+volatile int flag = 1;
 
 //drive head position
-volatile int headPos[NUMDRIVES];
+volatile int headPos[NUMDRIVES + 1];
 
 //period counter to match note period
-volatile int periodCounter[NUMDRIVES];
+volatile int periodCounter[NUMDRIVES + 1];
 
 //the note period 
-volatile int notePeriod[NUMDRIVES];
+volatile int notePeriod[NUMDRIVES + 1];
 
 //State of each drive
-volatile boolean driveState[NUMDRIVES]; //1 or 0
+volatile boolean driveState[NUMDRIVES + 1]; //1 or 0
 
 //Direction of each drive
-volatile boolean driveDir[NUMDRIVES]; // 1 -> forward, 0 -> backwards
+volatile boolean driveDir[NUMDRIVES + 1]; // 1 -> forward, 0 -> backwards
 
 //MIDI bytes
-byte midiStatus, midiChannel, midiCommand, midiNote;
-
+byte midiStatus, midiChannel, midiCommand, midiNote, midiVelocity;
 
 //Freq = 1/(RESOLUTION * Tick Count)
 static int noteLUT[127];
+
+volatile int tick = 0;
+
+volatile int wait = 0;
+
+File song;
+byte input[100];
 
 void setup()  { 
 
   //Init parameters
   int i,j;
-  for(i = 0; i < NUMDRIVES; i++){
+  for(i = 0; i < NUMDRIVES + 1; i++){
     driveDir[i] = 1; //Set initially at 1 to reset all drives
     driveState[i] = 0;
 
@@ -48,7 +63,7 @@ void setup()  {
 
   }
 
-  //Midi note setup found http://subsynth.sourceforge.net/midinote2freq.html
+  //Midi note setup found on wikipedia page on tuning standards
   double midi[127];
   int a = 440; // a is 440 hz...
   for (i = 0; i < 128; ++i)
@@ -62,14 +77,14 @@ void setup()  {
   }
 
   //Pin Setup 
-  for(i = 0; i < NUMDRIVES; i++){
+  for(i = 0; i < NUMDRIVES + 1; i++){
     pinMode(stepPins[i], OUTPUT);
     pinMode(dirPins[i], OUTPUT);
   }
 
   //Drive Reset
   for(i = 0; i < 80; i++){
-    for(j = 0; j < NUMDRIVES; j++){
+    for(j = 0; j < NUMDRIVES + 1; j++){
       digitalWrite(dirPins[j], driveDir[j]);
       digitalWrite(stepPins[j], 0);
       digitalWrite(stepPins[j], 1);
@@ -79,46 +94,295 @@ void setup()  {
   } 
 
   //Set Drive Pins to forward direction
-  for(i = 0; i < NUMDRIVES; i++){
+  for(i = 0; i < NUMDRIVES + 1; i++){
     driveDir[i] = 0; 
     digitalWrite(dirPins[i], driveDir[i]);
   }  
 
   delay(1000);
 
-  Timer1.initialize(RESOLUTION); //1200 microseconds * 1 = 800 Hz, but 400 Hz output.
+  //Serial for MIDI to Serial Drivers
+  Serial.begin(115200);   
+
+  pinMode(53, OUTPUT);
+  SD.begin(53);
+
+  song = SD.open("getLucky.mid");
+  
+  if(song){
+    Serial.print("GOOD");
+  }
+
+  int header = 1;
+
+  int trackNum;
+  int fileType;
+  int timeSig;
+  int keySig;
+
+  uint32_t PPQN=0;
+  double BPM =0;
+  double TEMPO=0;
+
+  int length = 0;
+  
+    if(header == 1){
+      song.read(input, 4);
+      Serial.print(input[0], HEX);
+      Serial.print(" ");
+      Serial.print(input[1], HEX);
+      Serial.print(" ");
+      Serial.print(input[2], HEX);
+      Serial.print(" ");
+      Serial.print(input[3], HEX);
+      Serial.print("\n");
+
+      song.read(input, 4);
+      Serial.print(input[0], HEX);
+      Serial.print(" ");
+      Serial.print(input[1], HEX);
+      Serial.print(" ");
+      Serial.print(input[2], HEX);
+      Serial.print(" ");
+      Serial.print(input[3], HEX);
+      Serial.print("\n");
+
+      song.read(input, 2);
+      Serial.print(input[0], HEX);
+      Serial.print(" ");
+      Serial.print(input[1], HEX);
+      Serial.print("\n");
+
+      fileType = input[1];
+
+      song.read(input, 2);
+      Serial.print(input[0], HEX);
+      Serial.print(" ");
+      Serial.print(input[1], HEX);
+      Serial.print("\n");
+
+      trackNum = input[1];
+      song.read(input, 2);
+      Serial.print(input[0], HEX);
+      Serial.print(" ");
+      Serial.print(input[1], HEX);
+      Serial.print("\n");
+
+      PPQN = ((input[0]) << 8) + input[1];
+
+header:
+      song.read(input, 4);
+      Serial.print(input[0], HEX);
+      Serial.print(" ");
+      Serial.print(input[1], HEX);
+      Serial.print(" ");
+      Serial.print(input[2], HEX);
+      Serial.print(" ");
+      Serial.print(input[3], HEX);
+      Serial.print("\n");
+
+
+      song.read(input, 4);
+      Serial.print(input[0], HEX);
+      Serial.print(" ");
+      Serial.print(input[1], HEX);
+      Serial.print(" ");
+      Serial.print(input[2], HEX);
+      Serial.print(" ");
+      Serial.print(input[3], HEX);
+      Serial.print(" ");
+      Serial.print("\n");
+
+      song.read(input, 1);
+      Serial.print(input[0], HEX);
+      Serial.print("\n");  
+
+      while(song.peek() == 0xFF){
+        song.read(input, 1);
+        Serial.print(input[0], HEX);
+        Serial.print(" ");
+        song.read(input, 1);
+        Serial.print(input[0], HEX);
+        Serial.print(" ");
+
+        if(input[0] == 0x51){
+
+          song.read(input, 1);
+
+          Serial.print(input[0], HEX);
+          Serial.print(" ");
+
+          length = input[0];
+  
+          song.read(input, length);
+ 
+          TEMPO = ((long)input[0] << 16) + ((long)input[1] << 8) + input[2];
+          BPM = 60000000/TEMPO;
+
+
+          for (int i = 0; i < length; i++){
+            Serial.print(" ");
+            Serial.print(input[i], HEX);
+          }
+          Serial.print("\n");
+        }
+        else if(input[0] == 0x59){
+           song.read(input, 1);
+
+          Serial.print(input[0], HEX);
+          Serial.print(" ");
+
+          length = input[0];
+  
+          song.read(input, length);
+        
+          for (int i = 0; i < length; i++){
+            Serial.print(" ");
+            Serial.print(input[i], HEX);
+          }
+          Serial.print("\n");
+        }
+        else if(input[0] == 0x2F){
+        song.read(input, 1); // 0x00
+        Serial.print(input[0], HEX);
+        Serial.print("\n");
+        
+        goto header;
+        
+        
+        }else{
+          song.read(input, 1);
+
+          Serial.print(input[0], HEX);
+          Serial.print(" ");
+
+          length = input[0];
+  
+          song.read(input, length);
+         for (int i = 0; i < length; i++){
+            Serial.print(" ");
+            Serial.print(input[i], HEX);
+          }
+          Serial.print("\n");
+        }
+
+        song.read(input, 1); // 0x00
+        Serial.print(input[0], HEX);
+        Serial.print("\n");
+        
+      }
+    }  
+    
+
+    header = 0;
+    BPM = 120;
+
+    PPQN = 192;
+    TEMPO = round(1000*60000/(BPM*PPQN)); 
+
+    
+  //Set timer1 interrupt and initialize
+  Timer1.initialize(RESOLUTION);
   Timer1.attachInterrupt(count);
 
-  Serial.begin(115200);   //Serial for MIDI to Serial Drivers
+  Timer3.initialize(TEMPO);
+  Timer3.attachInterrupt(parse);
+
 
 } 
 
-void loop()  {  
+void loop(){
 
-  //Only looking for 3 byte command
-  if(Serial.available() == 3){
-    midiStatus = Serial.read(); //MIDI Status
-    midiNote = Serial.read(); //MIDI Note
-    Serial.read(); //Ignoring MIDI Velocity
-
-    midiChannel = midiStatus & B00001111;
-    midiCommand = midiStatus & B11110000;
-
-    if(midiChannel < NUMDRIVES){
-      if(midiCommand == 0x90){
-        notePeriod[midiChannel] = noteLUT[midiNote];
-      }
-      else if(midiCommand == 0x80 || (midiCommand == 0xB0 && midiNote == 120)){
-        notePeriod[midiChannel] = 0;
-      }
+  while(flag == 0);
+ 
+  song.read(input, 2);
+  midiStatus = input[0];
+  midiNote = input[1];
+  
+  Serial.print(midiStatus , HEX);
+  Serial.print(" ");
+  Serial.print(midiNote, HEX);
+  Serial.print(" ");
+  
+  
+  midiChannel = midiStatus & B00001111;
+  midiCommand = midiStatus & B11110000;
+  
+  
+  if(midiStatus == 0xFF && midiNote == 0x2F){
+    Serial.print("Stuck");
+  
+    while(1);  
+  }
+  
+  if(midiCommand == 0xC0 || midiCommand == 0xD0){
+  }else{
+   
+  
+  song.read(input, 1);
+  midiVelocity = input[0];
+  
+  Serial.println(midiVelocity, HEX); 
+  
+  }
+  
+  //Ensure we are not going over the number of drives we have
+  if(midiChannel < NUMDRIVES + 1){
+  //Note On, set notePeriod to the midi note period
+    if(midiCommand == 0x90 && midiVelocity != 0){ 
+      notePeriod[midiChannel] = noteLUT[midiNote];
+    }
+    //Note off, Channel Off, velocity = 0
+    else if(midiCommand == 0x80 || (midiCommand == 0xB0 && midiNote == 120) || midiVelocity == 0){
+      notePeriod[midiChannel] = 0;
     }
   }
+  
+  int temp = 0;
+  wait = 0;
+  while(song.peek() >= 0x80){
+    song.read(input, 1);
+    Serial.print(input[0], HEX);
+    Serial.print(" ");
+    wait = input[0] & 0x7F;
+    wait = wait << 7;
+  }
+  song.read(input ,1);
+  Serial.println(input[0], HEX);
+  
+  wait |= input[0];
+  flag = 0;
+  
+  
+  //  //Only looking for 3 byte commaTnd
+  //  if(Serial.available() == 3){
+  //    midiStatus = Serial.read(); //MIDI Status
+  //    midiNote = Serial.read(); //MIDI Note
+  //    midiVelocity = Serial.read(); //MIDI Velocity
+  //    
+  //    //Parse out the channel and the command
+  //    midiChannel = midiStatus & B00001111;
+  //    midiCommand = midiStatus & B11110000;
+  //
+  //    //Ensure we are not going over the number of drives we have
+  //    if(midiChannel < NUMDRIVES + 1){
+  //      //Note On, set notePeriod to the midi note period
+  //      if(midiCommand == 0x90 && midiVelocity != 0){ 
+  //        notePeriod[midiChannel] = noteLUT[midiNote];
+  //      }
+  //      //Note off, Channel Off, velocity = 0
+  //      else if(midiCommand == 0x80 || (midiCommand == 0xB0 && midiNote == 120) || midiVelocity == 0){
+  //        notePeriod[midiChannel] = 0;
+  //      }
+  //    }
+  //  }  
+
 }
 
 void count(){
   int i;
   //For each drive
-  for(i = 0; i < NUMDRIVES; i++){
+  for(i = 0; i < NUMDRIVES + 1; i++){
     //If the desired drive is suppose to be ticking
     if(notePeriod[i] > 0){
       //tick the drive
@@ -141,8 +405,6 @@ void count(){
           driveDir[i] ^= 1;
           digitalWrite(dirPins[i], driveDir[i]);
         }
-
-
       }
     }
     else{
@@ -150,9 +412,24 @@ void count(){
       periodCounter[i] = 0;
 
     }
-  }
-
+  } 
 }
+
+void parse(){
+  
+  if(flag == 0){
+    tick++;
+    
+    if(tick >= wait){
+      tick = 0;
+      flag = 1;
+    }
+  }else{
+    tick = 0;
+  }
+ 
+}
+
 
 
 

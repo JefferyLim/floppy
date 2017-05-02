@@ -11,6 +11,11 @@
 \usepackage{caption}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{appendix}
+\usepackage{chngcntr}
+\usepackage{etoolbox}
+\usepackage{lipsum}
+\usepackage{tikz}
 \graphicspath{ {images/} }
 \setlength\parindent{0pt}
 
@@ -22,11 +27,7 @@
   \end{align*}
 }
 
-\usepackage{appendix}
-\usepackage{chngcntr}
-\usepackage{etoolbox}
-\usepackage{lipsum}
-\usepackage{tikz}
+
 \usetikzlibrary{shapes.geometric, arrows}
 
 \newcommand{\newappendix}{%
@@ -45,14 +46,13 @@
 \begin{center}
   \Huge Floppy Drive Orchestra \\
   \huge University of Colorado Boulder \\
-  \Large Independent Study\\
+  \Large Independent Study 2017\\
   
   \vspace{6in}
     \huge Jeffery Lim \\
     \huge Jeffery.Lim@colorado.edu\\
     \Large Under supervision of Dr. Shalom Ruben \\~\\~\\
 \end{center}
-\pagebreak
 
 \tableofcontents
 
@@ -101,6 +101,15 @@ Pin 18 is a direction pin. The direction is what determines the direction of the
 
 Pin 20 is a step pin. This pin drives the stepper motor. Every time the pin goes high, the stepper motor will go forward one tick.\\
 
+
+\begin{figure}[H]
+\hspace*{-2cm}    
+    \centering
+    \includegraphics[width=.75\textwidth]{floppy_pinoutV1.jpg}
+    \caption{Floppy Drive Necessary Pins}
+    \label{fig:pins}
+\end{figure}
+
 \section{Power}
 
 The floppy drive takes a mini Molex cable as seen in Figure \ref{fig:miniMolex}. A mini Molex cable has 4 different lines, one red, one yellow, and two black. The two black wires are grounded, where the red line is 5V and the yellow is 12V. Older generation floppy drives used both the 5V and 12V, where the 12V was used to power the stepper motor. The modern floppy drives no longer use the 12V for stepper motors, and only use 5V. For the final floppy drive hardware, this results in only needing a 5V rail to power all of the floppy drives.
@@ -114,7 +123,7 @@ The floppy drive takes a mini Molex cable as seen in Figure \ref{fig:miniMolex}.
 \end{figure}
 
 
-The power consumption was measured by using jumper cables to connect the floppy drives to a power supply, through an ampmeter. Pin 12 is grounded, to enable drive B. When the drive is not running, the ampmeter measured 50 mA. To test when active, pin 20 is connected to a function generator, generating a square wave. Pin 18 is grounded and set to high appropriately in order to allow the stepper motor to switch back and forth. When active, the floppy drive pulls 400 mA. The function generator was swept from all frequencies in order to see if a change in frequency would affect the current consumption, however, no change was made. This means that at most, each floppy drive requires around 400 mA. \\
+The power consumption was measured by using jumper cables to connect the floppy drives to a power supply, through an ammeter. Pin 12 is grounded, to enable drive B. When the drive is not running, the ammeter measured 50 mA. To test when active, pin 20 is connected to a function generator, generating a square wave. Pin 18 is grounded and set to high appropriately in order to allow the stepper motor to switch back and forth. When active, the floppy drive pulls 400 mA. The function generator was swept from all frequencies in order to see if a change in frequency would affect the current consumption, however, no change was made. This means that at most, each floppy drive requires around 400 mA. \\
 
 \section{Stepper Motor Movement}
 
@@ -134,7 +143,7 @@ The total number of ticks a 3.5 in. drive can go is 80, meaning the step pin (pi
 
 Since the music will be played through the read/write head, the bandwidth of the stepper motor will be a large limiting factor. For the test, a square wave from a waveform generator is connected to the step pin (pin 20), and the direction pin is connected to ground and disconnected in order to allow the read/write head to switch direction. \\
 
-The waveform generator is swepted from 1 Hz up until the read/write head is no longer moving. The drive was able to handle up to 400 Hz, but afterwords, it was no longer consistent in terms of the speed of the drive. This test is ran again when the software was fully written. This made a significant difference because the motor was able to run at a much higher input frequency. \\
+The waveform generator is swept from 1 Hz up until the read/write head is no longer moving. The drive was able to handle up to 400 Hz, but afterwards, it was no longer consistent in terms of the speed of the drive. This test is ran again when the software was fully written. This made a significant difference because the motor was able to run at a much higher input frequency. \\
 
 This limit considerably restricts what the drive can play, and higher notes will need to be addressed. However, so far, there is an assumption that the audible range contains the input frequency given to the stepper motor. In the next section, audio files of the floppy drives at each frequency are recorded and transformed. \\
 
@@ -145,30 +154,82 @@ Although the floppy drive was unable to run past 400 Hz, it is also important to
 
 \chapter{Hardware}
 
-In this chapter, the hardware setup of the orchestra is built.
+In this chapter, the hardware setup of the orchestra is built. The microcontroller chosen for this project was an Arduino. The use of shields allow building a floppy drive orchestra much simpler. 
 
 \section{Power}
 
 
-As discussed in the previous chapter on floppy drive power characteristics, since each floppy drive, when running, draws 400 mA. For each floppy drive added to the system, the total power draw increases by 400 mA, so for 4 floppy drives, the total power consumption from the floppy drive system would be around 1600 mA, or 1.6 A. 
-  
-\section{Arduino Wiring}
+As discussed in the previous chapter on floppy drive power characteristics, since each floppy drive, when running, draws 400 mA. For each floppy drive added to the system, the total power draw increases by 400 mA, so for 4 floppy drives, the total power consumption from the floppy drive system would be around 1600 mA, or 1.6 A. This means the power supply would need to be at least 2 A to take into consideration of the Arduino power consumption. This extra 400 mA would be plenty of enough to power the Arduino and run very extensive code. \\
 
-\section{Mount}
+The power is supplied from a 5V 2A power supply. This is directly connected into a power terminal. \\
+  
+\section{Cables}
+All the wires bought were from Pololu, which can be found in Table \ref{fig:BOM}. \\
+
+To build the wires, pre-crimped terminal wires were used. All wires bought were female wires. The power cord is simply a red and black wire connected to a 1 x 2 pin housing. 
+
+The data cables were a little bit more complicated. The floppy drive pins had a 2 x 10 pin housing. This housing would be connected to the far left side of the floppy drive pins. The only pins connected are the same as seen in Figure \ref{pins}. Pins 11 and 12 are connected to black pre-crimped terminals. Pin 18 is connected to a blue pre-crimped terminal and pin 20 is connected to a purple pre-crimped terminal. Since pin 11 is grounded, there is no need for any other ground pins to come out. \\
+
+On the other end of the data cable is a 2 x 2 pin housing. The order is significant and must be followed exactly. The two black wires can be connected to any pins, as long as they are on the same side. The blue and purple pin need to be in the following order: blue on the left, and purple on the right. This needs to be consistent because all of the direction pins are on even numbered pins and the step pins are on odd numbered pins. \\
+
+\section{Schematic}
+
+The following is the schematic of the shield. The shield purchased can be found in Table \ref{fig:BOM}. There are many ways to wire the shield, however, the easiest method is the following. 
+
+With the shield, solder on all the components that come with the shield. Once finished, then following the layout of the shield as seen in Figure \ref{fig:TOP}.
+
+
+\begin{figure}[H]
+\hspace*{-2cm}    
+    \centering
+    \includegraphics[width=.3\textwidth]{TOP.jpg}
+    \caption{Top of the Shield}
+    \label{fig:TOP}
+\end{figure}
+
+
+\begin{figure}[H]
+\hspace*{-2cm}    
+    \centering
+    \includegraphics[width=.3\textwidth]{TOP1.jpg}
+    \caption{Top of the Shield}
+    \label{fig:TOP1}
+\end{figure}
+
+\begin{figure}[H]
+\hspace*{-2cm}    
+    \centering
+    \includegraphics[width=.3\textwidth]{TOP2.jpg}
+    \caption{Top of the Shield}
+    \label{fig:TOP2}
+\end{figure}
+
+On the bottom, ensure that the wires are hooked accordingly. The grounded wires are colored black, while the 5V lines are colored red.
+
+\begin{figure}[H]
+\hspace*{-2cm}    
+    \centering
+    \includegraphics[width=.3\textwidth]{BOT.jpg}
+    \caption{Bottom of the Shield}
+    \label{fig:BOT}
+\end{figure}
+
 
 
 \chapter{MIDI Files}
 
-MIDI, or Musical Instrument Digital Interface, is a standard that has its own protocols, interface, and connectors. It allows a single file to contain multiple tracks for several instruments in its own channel. This allows a MIDI file to play several instruments at once, up to a maximum of 16 instruments. This advantage of the MIDI file allows multiple floppy drives to be played at once, like how a MIDI file would send data to several instruments. 
+MIDI, or Musical Instrument Digital Interface, is a standard that has its own protocols, interface, and connectors. It allows a single file to contain multiple tracks for several instruments in its own channel. This allows a MIDI file to play several instruments at once, up to a maximum of 16 instruments. This advantage of the MIDI file allows multiple floppy drives to be played at once, like how a MIDI file would normally send notes to several instruments. 
 
 \section{MIDI Notes}
 
-The MIDI interface has notes that are mapped to specific piano keys at their respected frequencies. 
+The MIDI interface has notes that are mapped to specific piano keys at their respected frequencies. Each note is represented by a byte, or 8 bits, however, it does not use the top bit, meaning the notes go from 0 to 127. In Figure \ref{fig:Piano}, the respected MIDI note number has an associated piano key, since the MIDI note is based on music pitch. In Table \ref{fig:note2freq}, the actual frequency of the MIDI note number is displayed in hertz. Because of the earlier findings on the floppy drive characteristics, there are a lot of notes that may not be played. Assuming the floppy drive limit is 400 Hz, notes 0 to 67, or at least half of the range can be played. 
+
 \begin{figure}[H]
 \hspace*{-2cm}    
     \centering
     \includegraphics[width=.75\textwidth]{midi_notechart.jpg}
     \caption{MIDI Note Number to Piano Key}
+    \label{fig:Piano}
 \end{figure}
 
 
@@ -246,8 +307,56 @@ The MIDI interface has notes that are mapped to specific piano keys at their res
 \end{center}
 
 
-\section{MIDI Messages}
+\section{MIDI} \label{MIDIMESSAGE}
 
+MIDI data is sent serially, meaning the data is sent one bit at a time. As a result, the Arduino will be accepting the data from a serial port. In order for the MIDI data to be understood, the messages sent need to be understood. MIDI files are separated into two parts: a header chunk and a track chunk. Each chunk is separated into three sections known as type of chunk, length of the data, and data. 
+
+\subsection{Header Chunk}
+
+The first 4 bytes are an ASCII representation of what type of chunk it is. This is always MThd for the header. The next 4 bytes is the length of the data section. The data section is a total of 6 bytes. The first 16 bits is the MIDI format. MIDI files comes in three formats: Format 0, Format 1, and Format 2. Format 0 is a single track format, where there is only one track or one instrument. Format 1 has multiple tracks, each to be played simultaneously. Format 2 has multiple tracks, each to be played independently. The next 16 bits are the number of tracks. The last 16 bits are the time divisions. There are two formats depending on the upper bit. \\
+
+
+\captionof{table}{Header Chunk}\label{fig:header}
+\begin{center}
+ \begin{tabular}{||c | c | c | c | c||} 
+ \hline
+  \multicolumn{5}{|c|}{Header Chunk} \\ 
+ \hline
+  \multicolumn{3}{|c|}{Chunk Type}  & Length & Data \\
+ \hline
+  ASCII (4 Bytes) & Length of Data(4 Bytes)  & Format (16 bits) & Tracks (16 bits) & Division (16 bits) \\
+ 
+ \hline
+\end{tabular}
+\end{center}
+
+If the upper bit is 0, then the value represents the number of time ticks per quarter note. If the upper bit is 1, then bits 0 to 7 represent the number of delta-time units per SMTPE frame. Bits 8 to 14 form the number of SMTPE frames per second. \\
+
+\subsection{Track Chunk}
+
+The track chunk starts out the same as the header chunk. The first 4 bytes are the ASCII representation and is always MTrk. It then gives the length of data of the data section. The last section is the data, which contains delta times and events. There are three types of events, however, the one that will be focused on are the MIDI events.
+
+
+\captionof{table}{Track Chunk}\label{fig:track}
+\begin{center}
+ \begin{tabular}{||c | c | c||} 
+ \hline
+  \multicolumn{3}{|c|}{Track Chunk} \\ 
+ \hline
+  Chunk Type & Length & Data \\
+ \hline
+  ASCII (4 Bytes) & Length of Data(32 bits)  &  Delta Time and Events \\
+ 
+ \hline
+\end{tabular}
+\end{center}
+
+
+\subsection{MIDI Message}
+
+The events that the track chunk talks about are the MIDI messages that are important to playing notes. Each message comes in 3 bytes. The first byte are a status byte that contains a command and channel. There are several commands, but for the floppy drive orchestra, there is only two commands that are important: note on and note off. The channel bits are the MIDI channels that the message is suppose to go to. \\
+
+The last two bytes are the note and velocity The velocity represents the loudness of the note. A zero velocity would have no sound, and anything above would mean to play the note. Since the floppy drive cannot produce a louder noise, we can effectively ignore it, unless it is equal to zero.
 
 \captionof{table}{MIDI Message}\label{fig:midimessage}
 \begin{center}
@@ -266,9 +375,13 @@ The MIDI interface has notes that are mapped to specific piano keys at their res
 \end{tabular}
 \end{center}
 
+\subsection{Delta Time}
+
+Delta time is the number of ticks needed until the next event. This is a crucial part of the data stream because it lets the instrument or player know that there needs to be waiting until the next note plays. This part is not important to running the floppy drive orchestra from the computer because the player will handle the ticks, however, if the Arduino is handling everything, it needs to keep track of the ticks.
+
 \chapter{Software}
 
-In order to run the software, there needs to be information to be sent from a computer to the arduino. 
+In order to run the software, there needs to be information to be sent from a computer to the Arduino. 
 
 \section{Using a PC}
 
@@ -290,15 +403,11 @@ The data flow path of the driver is as following.
 \end{center}
 
 
-\subsection{MIDI Player}
-
-The MIDI player takes in a MIDI file and play the music. 
-
 \subsection{MIDI to Serial Driver}
 
-The MIDI to serial driver is a key player in getting music to play on the floppy drives. The driver turns the MIDI outputs from the player, into data that is transmitted using serial. The driver used for this project was Hairless MIDI to Serial Bridge, found at \url{http://projectgus.github.io/hairless-midiserial/}. \\
+The MIDI to serial driver is a key player in getting music to play on the floppy drives. The driver turns the MIDI outputs from the player, into data that is transmitted using serial. The driver used for this project was Hairless MIDI to Serial Bridge, found at \cite{HairlessMIDI}. \\
 
-This project has platforms for all three operating systems and has a GUI that is easy to interface with as evident in \ref{fig:hairless}. The Serial<->MIDI Bridge On turns the driver on or off, being helpful with programming the arduino since the arduino requires the serial port to be programmed. The Serial Port drop down menu will have the name of the Arduino or the COM port being used by the arduino. The MIDI In drop down menu is where the MIDI player should be located. \\
+This project has platforms for all three operating systems and has a GUI that is easy to interface with as evident in Figure \ref{fig:hairless}. The Serial<->MIDI Bridge On turns the driver on or off, being necessary with reprogramming the Arduino since the Arduino requires the serial port to be programmed. The Serial Port drop down menu will have the name of the Arduino or the COM port being used by the Arduino. The MIDI In drop down menu is where the MIDI player or piano should be located. \\
 
 
 \begin{figure}[H]
@@ -309,9 +418,95 @@ This project has platforms for all three operating systems and has a GUI that is
     \label{fig:hairless}
 \end{figure} 
 
+The second MIDI to Serial Driver that works on Linux is known as ttymidi. This is a MIDI to serial driver that does not have a GUI and is all done on the command line. It is significantly more difficult to install and understand.
+
+\subsection{Virtual Keyboard}
+
+There is a program called VMPK or Virtual MIDI Piano Keyboard that sends MIDI file based on the note played \cite{VMPK}. This is a great way of testing the MIDI parser on the Arduino and testing the floppy drive's responsiveness to different notes. It will work on Linux or Mac.  
+
+The only necessary step is to go to EDIT -$>$ MIDI Connections and make sure that Enable MIDI input is selected as following:
+
+\begin{figure}[H]
+\hspace*{-2cm}    
+    \centering
+    \includegraphics[width=.75\textwidth]{HairlessSetup.png}
+    \caption{Hairess MIDI Setup}
+    \label{fig:hairlesssetup}
+\end{figure} 
+
+Once it is enabled, Hairless MIDI should show an option to set MIDI IN to VMPK. This will route the MIDI notes played from the piano to the Arduino. 
+
+\subsection{MIDI Player}
+
+The MIDI player is just like any audio player, with the exception of the ability to parse through the MIDI file format. There are specifications that must be met in order to use a MIDI player with the serial driver. The Hairless MIDI to Serial Bridge website, \cite{HairlessMIDI} does a good job of explaining further what needs to be done in order to work with MIDI players, but does not provide any programs that work with them. The MIDI player does some back-work for the Arduino: it handles the header and the delta time ticks. It sends the note on and note off messages at the correct time and keeps track of the beat. 
+
+\subsubsection{Hairless MIDI}
+
+In Linux, one must use ALSA, or advanced linux sound architecture. This architecture gives sound cards a good API with lots of features. The most important feature is the ability to work with MIDI. The two major programs necessary are pmidi, which can be downloaded at \cite{pmidi}, and aconnect, which is preinstalled on most flavors of Linux.
+
+The first step is to know which port to send pmidi data through. The following command lists out the different ports available.
+
+\begin{lstlisting}[language=bash]
+  $ pmidi -l
+   Port     Client name                       Port name
+   14:0     Midi Through                      Midi Through Port-0
+\end{lstlisting}
+
+Midi Through Port-0 is the port needed to send MIDI data through. The next step is to go to Hairless MIDI and set the MIDI In to Midi Through Port-0. This connects serial to Midi Through Port-0. Any data sent to this port will be sent out to the USB Port. \\
+
+The final step is to have pmidi play the music file. The command to do so is:
+
+
+\begin{lstlisting}[language=bash]
+  $ pmidi -p 14:0 [music file]
+\end{lstlisting}
+
+The -p signifies the port number, this case, 14:0, for Midi Through Port and the music file is the directory to the .mid file. \\
+
+
+\subsection{ttymidi}
+
+In order to use ttymidi, first download it from the link \cite{ttymidi}. Once it has been downloaded, ensure the system has libasound2, a library Used to work with ALSA. To install this library:
+
+
+\begin{lstlisting}[language=bash]
+  $ sudo apt-get install libasound2-dev
+\end{lstlisting}
+
+Next, edit the Makefile to add -lpthread to the line after all:
+
+\begin{lstlisting}[language=bash]
+all:
+    gcc src/ttymidi.c -o ttymidi -lasound -lpthread
+\end{lstlisting}
+
+Once these steps have been taking, the next two commands will make the library and install it. 
+
+\begin{lstlisting}[language=bash]
+  $ make
+  $ make install
+\end{lstlisting}
+
+In order to start ttymidi, ensure that the Arduino is plugged into the computer. It can be found in the dev directory and is usually named ttyACM0. 
+
+\begin{lstlisting}[language=bash]
+  $ ls /dev
+\end{lstlisting}
+
+Once you have figured out which directory it is, the next line initalizes the drivers.
+
+\begin{lstlisting}[language=bash]
+  $ ttymidi -s /dev/ttyACM0 -b 115200
+\end{lstlisting}
+
+
+
+
+
+
 \section{Arduino}
 
-The code written for the project was done entirely in arduino. 
+The code written for the project was done entirely in arduino.
 
 \section{SD Card(?)}
 
@@ -320,9 +515,11 @@ The code written for the project was done entirely in arduino.
 \section{Parameters}
 There are several global parameters used in order to do the control of the floppy drives. Each parameter are arrays of a set size, set specifically to the number of floppy drives in the system. For example, array[0] would be for the first floppy drive, and array[1] would be for the second. 
 
-\lstinputlisting[language=C, firstline=16, lastline=36]{../src/floppy/floppy.ino}
+\lstinputlisting[language=C, firstline=1, lastline=33]{../src/floppy/floppy.ino}
 
-The first two arrays are stepPins and dirPins, an array of the pin numbers for the step and direction pins of the floppy drive. \\
+There are a couple of preset defines. NUMDRIVES is simply the number of drives the Arduino can use. This number is currently at 7 because of the number of pins available on the Arduino. MAXSTEPS is the maximum number of alternating ticks that can go out of the step pin. This number is around double the maximum number of ticks the read/write head can move. RESOLUTION is how many microseconds the internal timer should be ticking at. \\
+
+The first two arrays are stepPins and dirPins, an array of the pin numbers for the step and direction pins of the floppy drive. These values are preset\\
 
 The array headPos stands for head position of each floppy drive. This number is to keep track of how far the head of the floppy drive is. Once it reaches the maximum number, the direction pin is flipped to move the head the other direction. \\
 
@@ -336,31 +533,31 @@ The last 4 parameters are each bytes that will contain the bytes received from s
 
 \section{Timer1 Library}
 
-The purpose of the timer library is to enable timer interrupts. Timer interrupts are software interrupts that stop the processor to address some service at a certain time. The way the library works is it utilizes timer1 of the arduino and sets a resolution. This resolution determines how often the timer triggers an interrupt. If the value is set to 100 us, it will trigger every 100 us. An ISR or interrupt service routine will run a specific code.
+The purpose of the timer library is to enable timer interrupts. Timer interrupts are software interrupts that stop the processor to address some service at a certain time. The way the library works is it utilizes timer1 of the Arduino and sets a resolution. This resolution determines how often the timer triggers an interrupt. If the value is set to 100 us, it will trigger every 100 us. An ISR or interrupt service routine will run a specific code.
 
 \section{Setup}
 
-In the setup section of the arduino code, the arduino runs through a couple of steps to properly ensure that the system is ready to go. The first step it goes through is initializing all the parameters to their proper values. \\
+In the setup section of the Arduino code, the Arduino runs through a couple of steps to properly ensure that the system is ready to go. The first step it goes through is initializing all the parameters to their proper values. \\
 
 
-\lstinputlisting[language=C, firstline=44,lastline=57]{../src/floppy/floppy.ino}
+\lstinputlisting[language=C, firstline=34,lastline=47]{../src/floppy/floppy.ino}
 
-The next step is to generate the note lookup table. This is generated by first generating the frequency value of each MIDI note. The equation can be seen in the code, as well as on the wikipedia page on MIDI tuning standards: \url{https://en.wikipedia.org/wiki/MIDI_tuning_standard}. \\
+The next step is to generate the note lookup table. This is generated by first generating the frequency value of each MIDI note. The equation can be seen in the code, as well as on the Wikipedia page on MIDI tuning standards \cite{MIDIStandard}.  \\
 
 
-\lstinputlisting[language=C, firstline=59,lastline=65]{../src/floppy/floppy.ino}
+\lstinputlisting[language=C, firstline=49,lastline=60]{../src/floppy/floppy.ino}
 
 The note lookup calculates the half period of each note and turns the frequency into seconds. \\
 
-\lstinputlisting[language=C, firstline=67,lastline=70]{../src/floppy/floppy.ino}
+\lstinputlisting[language=C, firstline=62,lastline=66]{../src/floppy/floppy.ino}
 
 The next section forces all the drives to reset and moves the read/write head back to the starting position. \\
 
-\lstinputlisting[language=C, firstline=72,lastline=95]{../src/floppy/floppy.ino}
+\lstinputlisting[language=C, firstline=68,lastline=77]{../src/floppy/floppy.ino}
 
-Finally, timer1 is initialized with the appropriate service function. 
+Finally, timer1 is initialized with the appropriate service function and the serial communication is set to the default rate of 115200. It is not recommended to change this value because Hairless MIDI defaults to this value. \\ 
 
-\lstinputlisting[language=C, firstline=99,lastline=100]{../src/floppy/floppy.ino}
+\lstinputlisting[language=C, firstline=88,lastline=93]{../src/floppy/floppy.ino}
 
 \section{Serial Reader}
 
@@ -382,14 +579,13 @@ The MIDI to serial driver sends MIDI data over serial, which is then used to set
 \end{tikzpicture}
 \end{center}
 
-This loop is represented in the loop function of the arduino. This code is continously waiting for serial data, and then it is parsed. 
+This loop is represented in the loop function of the Arduino. This code is continuously waiting for serial data, and then it is parsed. The parsing follows the MIDI file format as discussed in Section \ref{MIDIMESSAGE}. The loop only looks for note on, note off, and channel mode messages.  
 
-
-\lstinputlisting[language=C, firstline=106,lastline=126]{../src/floppy/floppy.ino}
+\lstinputlisting[language=C, firstline=95,lastline=120]{../src/floppy/floppy.ino}
 
 \section{ISR}
 
-The ISR or interrupt service routine is the routine that gets called every time the interrupt from the timer1 is triggered. The specific code run during this time is the code that does the driving of the floppy drives. 
+The ISR or interrupt service routine is the routine that gets called every time the interrupt from the timer1 is triggered. The specific code run during this time is the code that does the driving of the floppy drives. The block diagram is as following:
 
 \begin{tikzpicture}[node distance=2cm]
 
@@ -419,11 +615,26 @@ The ISR or interrupt service routine is the routine that gets called every time 
 
 \end{tikzpicture}
 
-\section{Floppy Drive Driver}
+\pagebreak
+The ISR follows a checklist. It is a for loop that checks each floppy drive's status. It first checks if notePeriod, or the requested period is greater than 0. If it is 0, that means that there is not a note suppose to be playing. Otherwise, it increments the period counter. This period counter is checked if it reached the requested period. If so, it flips the step pin. This action of flipping will cause the read/write head to move. It resets the period counter so that it will start the count again. The head position is kept track as well. This is to make sure that the read/write head does not get stuck at the end. If this variable has reached the maximum value, it will revert the direction by changing the value on the direction pin.
+
+
+\lstinputlisting[language=C, firstline=121,lastline=156]{../src/floppy/floppy.ino}
+
 \section{SD Card(?)}
 
+\chapter{Conclusion}
 
-\chapter{Bill of Materials}
+\pagebreak
+
+\appendix
+\newappendix\label{firstappendix}
+\section{Full Arduino Code}
+
+\lstinputlisting[language=C]{../src/floppy/floppy.ino}
+
+\newappendix
+\section{Bill of Materials}
 
 \footnotesize{
 \captionof{table}{MIDI Message}\label{fig:BOM}
@@ -432,7 +643,7 @@ The ISR or interrupt service routine is the routine that gets called every time 
  \hline
   \multicolumn{4}{|c|}{BOM} \\ 
  \hline
- ITEM & QUANTITY & COST & SOURCE \\
+ ITEM & QUANTITY & COST & LINK \\
  \hline
  Arduino R3 & 1 & \$ 24.95 & \url{https://www.adafruit.com/product/50} \\
  \hline
@@ -465,12 +676,22 @@ The ISR or interrupt service routine is the routine that gets called every time 
 \end{center}
 }
 
-\pagebreak
+\begin{thebibliography}{9}
+\bibitem{HairlessMIDI}
+\url{http://projectgus.github.io/hairless-midiserial/}
+\bibitem{pmidi}
+\url{http://alsa.opensrc.org/Pmidi}
+\bibitem{ttymidi}
+\url{http://www.varal.org/ttymidi/}
+\bibitem{VMPK}
+\url{http://vmpk.sourceforge.net/}
+\bibitem{Music}
+\url{https://github.com/coon42/Floppy-Music--midis-/tree/master/midi/finished/MrSolidSnake745}
+\bibitem{MIDIStandard}
+\url{https://en.wikipedia.org/wiki/MIDI_tuning_standard}
+\bibitem{MIDIMessage}
+\url{https://www.midi.org/specifications/item/table-1-summary-of-midi-message}
+\end{thebibliography}
 
-\appendix
-\newappendix\label{firstappendix}
-\section{Full Arduino Code}
-
-\lstinputlisting[language=C]{../src/floppy/floppy.ino}
 
 \end{document}
