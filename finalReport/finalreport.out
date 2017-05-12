@@ -16,23 +16,26 @@
 \BOOKMARK [2][-]{subsection.4.2.2}{Track Chunk}{section.4.2}% 16
 \BOOKMARK [2][-]{subsection.4.2.3}{MIDI Message}{section.4.2}% 17
 \BOOKMARK [2][-]{subsection.4.2.4}{Delta Time}{section.4.2}% 18
-\BOOKMARK [0][-]{chapter.5}{Software}{}% 19
-\BOOKMARK [1][-]{section.5.1}{Using a PC}{chapter.5}% 20
-\BOOKMARK [2][-]{subsection.5.1.1}{MIDI to Serial Driver}{section.5.1}% 21
-\BOOKMARK [2][-]{subsection.5.1.2}{Virtual Keyboard}{section.5.1}% 22
-\BOOKMARK [2][-]{subsection.5.1.3}{MIDI Player}{section.5.1}% 23
-\BOOKMARK [2][-]{subsection.5.1.4}{ttymidi}{section.5.1}% 24
-\BOOKMARK [1][-]{section.5.2}{Arduino}{chapter.5}% 25
-\BOOKMARK [1][-]{section.5.3}{SD Card\(?\)}{chapter.5}% 26
-\BOOKMARK [0][-]{chapter.6}{Arduino}{}% 27
-\BOOKMARK [1][-]{section.6.1}{Parameters}{chapter.6}% 28
-\BOOKMARK [1][-]{section.6.2}{Timer1 Library}{chapter.6}% 29
-\BOOKMARK [1][-]{section.6.3}{Setup}{chapter.6}% 30
-\BOOKMARK [1][-]{section.6.4}{Serial Reader}{chapter.6}% 31
-\BOOKMARK [1][-]{section.6.5}{ISR}{chapter.6}% 32
-\BOOKMARK [1][-]{section.6.6}{SD Card\(?\)}{chapter.6}% 33
-\BOOKMARK [0][-]{chapter.7}{Conclusion}{}% 34
-\BOOKMARK [0][-]{appendix*.16}{Appendix A}{}% 35
-\BOOKMARK [1][-]{section.A.1}{Full Arduino Code}{appendix*.16}% 36
-\BOOKMARK [0][-]{appendix*.17}{Appendix B}{}% 37
-\BOOKMARK [1][-]{section.B.1}{Bill of Materials}{appendix*.17}% 38
+\BOOKMARK [1][-]{section.4.3}{Extra Sources}{chapter.4}% 19
+\BOOKMARK [0][-]{chapter.5}{Software}{}% 20
+\BOOKMARK [1][-]{section.5.1}{MIDI to Serial Driver}{chapter.5}% 21
+\BOOKMARK [1][-]{section.5.2}{Virtual Keyboard}{chapter.5}% 22
+\BOOKMARK [1][-]{section.5.3}{MIDI Player}{chapter.5}% 23
+\BOOKMARK [2][-]{subsection.5.3.1}{pmidi and Hairless MIDI}{section.5.3}% 24
+\BOOKMARK [2][-]{subsection.5.3.2}{pmidi and ttymidi}{section.5.3}% 25
+\BOOKMARK [0][-]{chapter.6}{Arduino}{}% 26
+\BOOKMARK [1][-]{section.6.1}{Parameters}{chapter.6}% 27
+\BOOKMARK [1][-]{section.6.2}{Timer1 Library}{chapter.6}% 28
+\BOOKMARK [1][-]{section.6.3}{Setup}{chapter.6}% 29
+\BOOKMARK [1][-]{section.6.4}{Serial Reader}{chapter.6}% 30
+\BOOKMARK [1][-]{section.6.5}{ISR}{chapter.6}% 31
+\BOOKMARK [0][-]{chapter.7}{Future Work}{}% 32
+\BOOKMARK [1][-]{section.7.1}{Arduino Mega}{chapter.7}% 33
+\BOOKMARK [1][-]{section.7.2}{Arduino as the MIDI Player}{chapter.7}% 34
+\BOOKMARK [1][-]{section.7.3}{Addressing the Bandwidth}{chapter.7}% 35
+\BOOKMARK [0][-]{appendix*.20}{Appendix A}{}% 36
+\BOOKMARK [1][-]{section.A.1}{Arduino Uno Code}{appendix*.20}% 37
+\BOOKMARK [0][-]{appendix*.21}{Appendix B}{}% 38
+\BOOKMARK [1][-]{section.B.1}{Arduino Mega Code}{appendix*.21}% 39
+\BOOKMARK [0][-]{appendix*.22}{Appendix C}{}% 40
+\BOOKMARK [1][-]{section.C.1}{Bill of Materials}{appendix*.22}% 41

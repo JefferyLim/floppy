@@ -2,18 +2,13 @@
 
 #include <TimerOne.h>  
 
-#define NUMDRIVES 7 //Number of Drives being used
+#define NUMDRIVES 8 //Number of Drives being used
 
 #define MAXSTEPS 150 //Maximum number of steps the head can go
 #define RESOLUTION 100 //us resolution of timer
 
-//(125 cycles) * (128 prescaler) / (16MHz clock speed) = 1ms
-//(1 * 128) / 16MHz
-
-volatile int stepPins[NUMDRIVES + 1] = { A1, A3, A5, 1, 3, 5, 7, 9}; //ODD PINS
-volatile int dirPins[NUMDRIVES + 1]  = { A0, A2, A4, 2, 4, 6, 8, 10}; //EVEN PINS
-
-volatile int flag = 1;
+volatile int stepPins[NUMDRIVES + 1] = { A1, A3, A5, 1, 3, 5, 7, 9, 11}; //ODD PINS
+volatile int dirPins[NUMDRIVES + 1]  = { A0, A2, A4, 2, 4, 6, 8, 10, 12}; //EVEN PINS
 
 //drive head position
 volatile int headPos[NUMDRIVES + 1];
@@ -36,11 +31,11 @@ byte midiStatus, midiChannel, midiCommand, midiNote, midiVelocity;
 //Freq = 1/(RESOLUTION * Tick Count)
 static int noteLUT[127];
 
-void setup()  { 
+void setup(){ 
 
   //Init parameters
   int i,j;
-  for(i = 0; i < NUMDRIVES + 1; i++){
+  for(i = 0; i < NUMDRIVES; i++){
     driveDir[i] = 1; //Set initially at 1 to reset all drives
     driveState[i] = 0;
 
@@ -65,14 +60,14 @@ void setup()  {
   }
 
   //Pin Setup 
-  for(i = 0; i < NUMDRIVES + 1; i++){
+  for(i = 0; i < NUMDRIVES; i++){
     pinMode(stepPins[i], OUTPUT);
     pinMode(dirPins[i], OUTPUT);
   }
 
   //Drive Reset
   for(i = 0; i < 80; i++){
-    for(j = 0; j < NUMDRIVES + 1; j++){
+    for(j = 0; j < NUMDRIVES; j++){
       digitalWrite(dirPins[j], driveDir[j]);
       digitalWrite(stepPins[j], 0);
       digitalWrite(stepPins[j], 1);
@@ -82,7 +77,7 @@ void setup()  {
   } 
 
   //Set Drive Pins to forward direction
-  for(i = 0; i < NUMDRIVES + 1; i++){
+  for(i = 0; i < NUMDRIVES; i++){
     driveDir[i] = 0; 
     digitalWrite(dirPins[i], driveDir[i]);
   }  
@@ -111,24 +106,24 @@ void loop(){
     midiCommand = midiStatus & B11110000;
     
     //Ensure we are not going over the number of drives we have
-    if(midiChannel < NUMDRIVES + 1){
+    if(midiChannel < NUMDRIVES){
     //Note On, set notePeriod to the midi note period
       if(midiCommand == 0x90 && midiVelocity != 0){ 
         notePeriod[midiChannel] = noteLUT[midiNote];
       }
       //Note off, Channel Off, velocity = 0
-      else if(midiCommand == 0x80 || (midiCommand == 0xB0 && midiNote == 120) || midiVelocity == 0){
+      else if(midiCommand == 0x80 || (midiCommand == 0xB0 && midiNote == 120) || (midiCommand == 0x90 && midiVelocity == 0)){
         notePeriod[midiChannel] = 0;
       }
     }
-}  
+  }  
 
 }
 
 void count(){
   int i;
   //For each drive
-  for(i = 0; i < NUMDRIVES + 1; i++){
+  for(i = 0; i < NUMDRIVES; i++){
     //If the desired drive is suppose to be ticking
     if(notePeriod[i] > 0){
       //tick the drive
@@ -142,7 +137,7 @@ void count(){
         digitalWrite(stepPins[i], driveState[i]);
 
         //reset the counter
-        periodCounter[i] = 0; //IT WAS == AND I COULDN'T FIGURE OUT WHY IT WASN'T WORKING
+        periodCounter[i] = 0;
 
         headPos[i]++;
         //If the drive is at the maximum step, reset its direction

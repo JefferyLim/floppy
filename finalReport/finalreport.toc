@@ -1,39 +1,43 @@
 \contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}
 \contentsline {chapter}{\numberline {2}Floppy Drive Characteristics}{5}{chapter.2}
 \contentsline {section}{\numberline {2.1}Floppy Pinout}{5}{section.2.1}
-\contentsline {section}{\numberline {2.2}Power}{6}{section.2.2}
+\contentsline {section}{\numberline {2.2}Power}{7}{section.2.2}
 \contentsline {section}{\numberline {2.3}Stepper Motor Movement}{7}{section.2.3}
-\contentsline {section}{\numberline {2.4}Stepper Motor Bandwidth}{7}{section.2.4}
+\contentsline {section}{\numberline {2.4}Stepper Motor Bandwidth}{8}{section.2.4}
 \contentsline {section}{\numberline {2.5}Frequency}{8}{section.2.5}
-\contentsline {chapter}{\numberline {3}Hardware}{9}{chapter.3}
-\contentsline {section}{\numberline {3.1}Power}{9}{section.3.1}
-\contentsline {section}{\numberline {3.2}Cables}{9}{section.3.2}
-\contentsline {section}{\numberline {3.3}Schematic}{10}{section.3.3}
-\contentsline {chapter}{\numberline {4}MIDI Files}{11}{chapter.4}
-\contentsline {section}{\numberline {4.1}MIDI Notes}{11}{section.4.1}
-\contentsline {section}{\numberline {4.2}MIDI}{13}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}Header Chunk}{13}{subsection.4.2.1}
-\contentsline {subsection}{\numberline {4.2.2}Track Chunk}{14}{subsection.4.2.2}
-\contentsline {subsection}{\numberline {4.2.3}MIDI Message}{14}{subsection.4.2.3}
-\contentsline {subsection}{\numberline {4.2.4}Delta Time}{14}{subsection.4.2.4}
-\contentsline {chapter}{\numberline {5}Software}{15}{chapter.5}
-\contentsline {section}{\numberline {5.1}Using a PC}{15}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}MIDI to Serial Driver}{15}{subsection.5.1.1}
-\contentsline {subsection}{\numberline {5.1.2}Virtual Keyboard}{16}{subsection.5.1.2}
-\contentsline {subsection}{\numberline {5.1.3}MIDI Player}{16}{subsection.5.1.3}
-\contentsline {subsubsection}{Hairless MIDI}{16}{section*.15}
-\contentsline {subsection}{\numberline {5.1.4}ttymidi}{17}{subsection.5.1.4}
-\contentsline {section}{\numberline {5.2}Arduino}{17}{section.5.2}
-\contentsline {section}{\numberline {5.3}SD Card(?)}{17}{section.5.3}
-\contentsline {chapter}{\numberline {6}Arduino}{18}{chapter.6}
-\contentsline {section}{\numberline {6.1}Parameters}{18}{section.6.1}
-\contentsline {section}{\numberline {6.2}Timer1 Library}{19}{section.6.2}
-\contentsline {section}{\numberline {6.3}Setup}{19}{section.6.3}
-\contentsline {section}{\numberline {6.4}Serial Reader}{21}{section.6.4}
-\contentsline {section}{\numberline {6.5}ISR}{21}{section.6.5}
-\contentsline {section}{\numberline {6.6}SD Card(?)}{23}{section.6.6}
-\contentsline {chapter}{\numberline {7}Conclusion}{24}{chapter.7}
-\contentsline {chapter}{Appendix A}{25}{appendix*.16}
-\contentsline {section}{\numberline {A.1}Full Arduino Code}{25}{section.A.1}
-\contentsline {chapter}{Appendix B}{29}{appendix*.17}
-\contentsline {section}{\numberline {B.1}Bill of Materials}{29}{section.B.1}
+\contentsline {chapter}{\numberline {3}Hardware}{10}{chapter.3}
+\contentsline {section}{\numberline {3.1}Power}{10}{section.3.1}
+\contentsline {section}{\numberline {3.2}Cables}{10}{section.3.2}
+\contentsline {section}{\numberline {3.3}Schematic}{11}{section.3.3}
+\contentsline {chapter}{\numberline {4}MIDI Files}{14}{chapter.4}
+\contentsline {section}{\numberline {4.1}MIDI Notes}{14}{section.4.1}
+\contentsline {section}{\numberline {4.2}MIDI}{15}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Header Chunk}{15}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Track Chunk}{16}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}MIDI Message}{16}{subsection.4.2.3}
+\contentsline {subsection}{\numberline {4.2.4}Delta Time}{17}{subsection.4.2.4}
+\contentsline {section}{\numberline {4.3}Extra Sources}{17}{section.4.3}
+\contentsline {chapter}{\numberline {5}Software}{18}{chapter.5}
+\contentsline {section}{\numberline {5.1}MIDI to Serial Driver}{18}{section.5.1}
+\contentsline {section}{\numberline {5.2}Virtual Keyboard}{19}{section.5.2}
+\contentsline {section}{\numberline {5.3}MIDI Player}{20}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}pmidi and Hairless MIDI}{20}{subsection.5.3.1}
+\contentsline {subsection}{\numberline {5.3.2}pmidi and ttymidi}{21}{subsection.5.3.2}
+\contentsline {subsubsection}{pmidi}{22}{section*.18}
+\contentsline {subsubsection}{Virtual Keyboard}{22}{section*.19}
+\contentsline {chapter}{\numberline {6}Arduino}{23}{chapter.6}
+\contentsline {section}{\numberline {6.1}Parameters}{23}{section.6.1}
+\contentsline {section}{\numberline {6.2}Timer1 Library}{24}{section.6.2}
+\contentsline {section}{\numberline {6.3}Setup}{24}{section.6.3}
+\contentsline {section}{\numberline {6.4}Serial Reader}{26}{section.6.4}
+\contentsline {section}{\numberline {6.5}ISR}{26}{section.6.5}
+\contentsline {chapter}{\numberline {7}Future Work}{29}{chapter.7}
+\contentsline {section}{\numberline {7.1}Arduino Mega}{29}{section.7.1}
+\contentsline {section}{\numberline {7.2}Arduino as the MIDI Player}{29}{section.7.2}
+\contentsline {section}{\numberline {7.3}Addressing the Bandwidth}{30}{section.7.3}
+\contentsline {chapter}{Appendix A}{31}{appendix*.20}
+\contentsline {section}{\numberline {A.1}Arduino Uno Code}{31}{section.A.1}
+\contentsline {chapter}{Appendix B}{34}{appendix*.21}
+\contentsline {section}{\numberline {B.1}Arduino Mega Code}{34}{section.B.1}
+\contentsline {chapter}{Appendix C}{41}{appendix*.22}
+\contentsline {section}{\numberline {C.1}Bill of Materials}{41}{section.C.1}

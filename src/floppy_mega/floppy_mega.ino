@@ -1,6 +1,9 @@
 // floppy - Independent Study Spring 2017 with Professor Shalom Ruben
 
 #include <TimerOne.h>  
+#include <TimerThree.h>
+
+#include <SD.h>
 
 #define NUMDRIVES 7 //Number of Drives being used
 
@@ -10,8 +13,10 @@
 //(125 cycles) * (128 prescaler) / (16MHz clock speed) = 1ms
 //(1 * 128) / 16MHz
 
-volatile int stepPins[NUMDRIVES + 1] = { A1, A3, A5, 1, 3, 5, 7, 9}; //ODD PINS
-volatile int dirPins[NUMDRIVES + 1]  = { A0, A2, A4, 2, 4, 6, 8, 10}; //EVEN PINS
+volatile int stepPins[NUMDRIVES + 1] = {
+  A0, A2, A4, 9, A5, A3, A1}; //ODD PINS
+volatile int dirPins[NUMDRIVES + 1]  = {
+  A1, A3, A5, 8, A4, A2, A0}; //EVEN PINS
 
 volatile int flag = 1;
 
@@ -35,6 +40,13 @@ byte midiStatus, midiChannel, midiCommand, midiNote, midiVelocity;
 
 //Freq = 1/(RESOLUTION * Tick Count)
 static int noteLUT[127];
+
+volatile int tick = 0;
+
+volatile int wait = 0;
+
+File song;
+byte input[100];
 
 void setup()  { 
 
@@ -89,39 +101,269 @@ void setup()  {
 
   delay(1000);
 
-  //Set timer1 interrupt and initialize
+  //Serial for MIDI to Serial Drivers
+  Serial.begin(115200);   
+
+  pinMode(53, OUTPUT);
+  SD.begin(53);
+
+  song = SD.open("getLucky.mid");
+
+  if(song){
+    Serial.print("File Found");
+  }
+
+  int header = 1;
+
+  int trackNum;
+  int fileType;
+  int timeSig;
+  int keySig;
+
+  uint32_t PPQN=0; //Parts Per Quarter Note
+  double BPM =0; //Beats Per Minute
+  double usPerTick=0; //usPerTick
+
+  int length = 0; 
+
+  if(header == 1){
+    //Header
+    song.read(input, 4);
+    Serial.print(input[0], HEX);
+    Serial.print(" ");
+    Serial.print(input[1], HEX);
+    Serial.print(" ");
+    Serial.print(input[2], HEX);
+    Serial.print(" ");
+    Serial.print(input[3], HEX);
+    Serial.print("\n");
+
+    //Length of Data
+    song.read(input, 4);
+    Serial.print(input[0], HEX);
+    Serial.print(" ");
+    Serial.print(input[1], HEX);
+    Serial.print(" ");
+    Serial.print(input[2], HEX);
+    Serial.print(" ");
+    Serial.print(input[3], HEX);
+    Serial.print("\n");
+
+    //MIDI Format
+    song.read(input, 2);
+    Serial.print(input[0], HEX);
+    Serial.print(" ");
+    Serial.print(input[1], HEX);
+    Serial.print("\n");
+
+    fileType = input[1];
+
+    //Number of Tracks
+    song.read(input, 2);
+    Serial.print(input[0], HEX);
+    Serial.print(" ");
+    Serial.print(input[1], HEX);
+    Serial.print("\n");
+
+    trackNum = input[1];
+
+    //Time Divison or PPQN
+    song.read(input, 2);
+    Serial.print(input[0], HEX);
+    Serial.print(" ");
+    Serial.print(input[1], HEX);
+    Serial.print("\n");
+
+    PPQN = ((input[0]) << 8) + input[1];
+
+header:
+    //Track Header
+    song.read(input, 4);
+    Serial.print(input[0], HEX);
+    Serial.print(" ");
+    Serial.print(input[1], HEX);
+    Serial.print(" ");
+    Serial.print(input[2], HEX);
+    Serial.print(" ");
+    Serial.print(input[3], HEX);
+    Serial.print("\n");
+
+    //Track Length
+    song.read(input, 4);
+    Serial.print(input[0], HEX);
+    Serial.print(" ");
+    Serial.print(input[1], HEX);
+    Serial.print(" ");
+    Serial.print(input[2], HEX);
+    Serial.print(" ");
+    Serial.print(input[3], HEX);
+    Serial.print(" ");
+    Serial.print("\n");
+
+    song.read(input, 1);
+    Serial.print(input[0], HEX);
+    Serial.print("\n");  
+
+    while(song.peek() == 0xFF){
+      song.read(input, 1);
+      Serial.print(input[0], HEX);
+      Serial.print(" ");
+      song.read(input, 1);
+      Serial.print(input[0], HEX);
+      Serial.print(" ");
+
+      if(input[0] == 0x51){
+
+        song.read(input, 1);
+
+        Serial.print(input[0], HEX);
+        Serial.print(" ");
+
+        length = input[0];
+
+        song.read(input, length);
+
+        usPerTick = ((long)input[0] << 16) + ((long)input[1] << 8) + input[2];
+        BPM = 60000000/usPerTick;
+
+
+        for (int i = 0; i < length; i++){
+          Serial.print(" ");
+          Serial.print(input[i], HEX);
+        }
+        Serial.print("\n");
+      }
+      else if(input[0] == 0x59){
+        song.read(input, 1);
+
+        Serial.print(input[0], HEX);
+        Serial.print(" ");
+
+        length = input[0];
+
+        song.read(input, length);
+
+        for (int i = 0; i < length; i++){
+          Serial.print(" ");
+          Serial.print(input[i], HEX);
+        }
+        Serial.print("\n");
+      }
+      else if(input[0] == 0x2F){
+        song.read(input, 1); // 0x00
+        Serial.print(input[0], HEX);
+        Serial.print("\n");
+
+        goto header;
+
+
+      }
+      else{
+        song.read(input, 1);
+
+        Serial.print(input[0], HEX);
+        Serial.print(" ");
+
+        length = input[0];
+
+        song.read(input, length);
+        for (int i = 0; i < length; i++){
+          Serial.print(" ");
+          Serial.print(input[i], HEX);
+        }
+        Serial.print("\n");
+      }
+
+      song.read(input, 1); // 0x00
+      Serial.print(input[0], HEX);
+      Serial.print("\n");
+
+    }
+  }  
+
+
+  header = 0;
+  BPM = 120;
+
+  PPQN = 192;
+  //This is the calculation needed to determine how much each tick lasts
+  //A good source was found here:
+  //http://stackoverflow.com/questions/24717050/midi-tick-to-millisecond
+  usPerTick = round(1000*60000/(BPM*PPQN)); 
+
+
+  //Set timer1 inter60000/(BPM*PPQN) rupt and initialize
   Timer1.initialize(RESOLUTION);
   Timer1.attachInterrupt(count);
 
+  Timer3.initialize(usPerTick);
+  Timer3.attachInterrupt(parse);
 
-  //Serial for MIDI to Serial Drivers
-  Serial.begin(115200);   
+
 } 
 
 void loop(){
 
-  //Only looking for 3 byte command
-  if(Serial.available() == 3){
-    midiStatus = Serial.read(); //MIDI Status
-    midiNote = Serial.read(); //MIDI Note
-    midiVelocity = Serial.read(); //MIDI Velocity
-     
-    //Parse out the channel and the command
-    midiChannel = midiStatus & B00001111;
-    midiCommand = midiStatus & B11110000;
-    
-    //Ensure we are not going over the number of drives we have
-    if(midiChannel < NUMDRIVES + 1){
+  while(flag == 0);
+
+  song.read(input, 2);
+  midiStatus = input[0];
+  midiNote = input[1];
+
+  Serial.print(midiStatus , HEX);
+  Serial.print(" ");
+  Serial.print(midiNote, HEX);
+  Serial.print(" ");
+
+
+  midiChannel = midiStatus & B00001111;
+  midiCommand = midiStatus & B11110000;
+
+  //This is the message for the end of a track
+  //This part is where I left on because I realized
+  //that the midi file would need to be parsed through entirely
+  if(midiStatus == 0xFF && midiNote == 0x2F){
+    while(1);
+  }
+
+  if(midiCommand == 0xC0 || midiCommand == 0xD0){
+  }
+  else{
+
+
+    song.read(input, 1);
+    midiVelocity = input[0];
+
+    Serial.println(midiVelocity, HEX); 
+
+  }
+
+  //Ensure we are not going over the number of drives we have
+  if(midiChannel < NUMDRIVES + 1){
     //Note On, set notePeriod to the midi note period
-      if(midiCommand == 0x90 && midiVelocity != 0){ 
-        notePeriod[midiChannel] = noteLUT[midiNote];
-      }
-      //Note off, Channel Off, velocity = 0
-      else if(midiCommand == 0x80 || (midiCommand == 0xB0 && midiNote == 120) || midiVelocity == 0){
-        notePeriod[midiChannel] = 0;
-      }
+    if(midiCommand == 0x90 && midiVelocity != 0){ 
+      notePeriod[midiChannel] = noteLUT[midiNote];
     }
-}  
+    //Note off, Channel Off, velocity = 0
+    else if(midiCommand == 0x80 || (midiCommand == 0xB0 && midiNote == 120) || midiVelocity == 0){
+      notePeriod[midiChannel] = 0;
+    }
+  }
+
+  int temp = 0;
+  wait = 0;
+  while(song.peek() >= 0x80){
+    song.read(input, 1);
+    Serial.print(input[0], HEX);
+    Serial.print(" ");
+    wait = input[0] & 0x7F;
+    wait = wait << 7;
+  }
+  song.read(input ,1);
+  Serial.println(input[0], HEX);
+
+  wait |= input[0];
+  flag = 0;
 
 }
 
@@ -160,5 +402,27 @@ void count(){
     }
   } 
 }
+
+//ISR for parsing through the MIDI tracks
+void parse(){  
+  //If the flag is 0, we should be ticking
+  if(flag == 0){
+    tick++;
+
+    //If the wait time from the delta time is reached
+    if(tick >= wait){
+      tick = 0;
+      //Raise the flag to let the main loop that it can get the next message
+      flag = 1;
+    }
+  }
+  else{
+    tick = 0;
+  }
+
+}
+
+
+
 
 
